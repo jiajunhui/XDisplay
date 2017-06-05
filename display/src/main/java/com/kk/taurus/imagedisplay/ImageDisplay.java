@@ -1,6 +1,7 @@
 package com.kk.taurus.imagedisplay;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
@@ -12,6 +13,7 @@ import com.kk.taurus.imagedisplay.entity.DisplayTask;
 import com.kk.taurus.imagedisplay.entity.ThumbnailType;
 import com.kk.taurus.imagedisplay.load.LoadManager;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
@@ -64,13 +66,21 @@ public class ImageDisplay {
         DisPlayConstant.heightPixels = displayMetrics.heightPixels;
         settingBuilder = new SettingBuilder()
                 .setContext(context)
-                .setCacheDir(context.getExternalCacheDir())
+                .setCacheDir(getDefaultCacheDir(context))
                 .setCoreThreadCount(5)
                 .setDiskCacheValueCount(1)
                 .setMaxMemoryCacheSize(cacheMemory)
                 .setMaxDiskCacheSize(200*1024*1024)
                 .setCacheKeyProvider(new SettingBuilder.DefaultCacheKeyProvider());
         initManager(settingBuilder);
+    }
+
+    private static File getDefaultCacheDir(Context context){
+        File dir = context.getCacheDir();
+        if(Environment.MEDIA_MOUNTED.equalsIgnoreCase(Environment.getExternalStorageState())){
+            dir = context.getExternalCacheDir();
+        }
+        return dir;
     }
 
     public static void createConfig(SettingBuilder userSetting){

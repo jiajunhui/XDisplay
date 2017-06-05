@@ -142,13 +142,6 @@ public class LoadManager {
                 WeakReference<Context> weakReference = task.getContext();
                 if(task.isLegalTag() && weakReference!=null){
                     ImageView imageView = (ImageView) view;
-                    BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
-                    if(drawable!=null){
-                        Bitmap bmp = drawable.getBitmap();
-                        if (null != bmp && !bmp.isRecycled()){
-                            bmp.recycle();
-                        }
-                    }
                     imageView.setImageDrawable(weakReference.get().getResources().getDrawable(task.getPlaceHolder()));
                     imageView.refreshDrawableState();
                 }
