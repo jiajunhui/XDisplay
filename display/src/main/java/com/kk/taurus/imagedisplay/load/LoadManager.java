@@ -130,28 +130,43 @@ public class LoadManager {
             Log.d(TAG,"from LruCache ...");
             refreshResult(bitmap,task);
         }else{
-            if(task.getPlaceHolder()!=-1 && task.getTarget()!=null){
-                final View view = task.getTarget();
-                if(view instanceof ImageView){
-                    WeakReference<Context> weakReference = task.getContext();
-                    if(task.isLegalTag() && weakReference!=null){
-                        ((ImageView) view).setImageDrawable(weakReference.get().getResources().getDrawable(task.getPlaceHolder()));
+            settingPlaceHolder(task);
+            addTask(task);
+        }
+    }
+
+    private void settingPlaceHolder(DisplayTask task) {
+        if(task.getPlaceHolder()!=-1 && task.getTarget()!=null){
+            final View view = task.getTarget();
+            if(view instanceof ImageView){
+                WeakReference<Context> weakReference = task.getContext();
+                if(task.isLegalTag() && weakReference!=null){
+                    ImageView imageView = (ImageView) view;
+                    BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
+                    if(drawable!=null){
+                        Bitmap bmp = drawable.getBitmap();
+                        if (null != bmp && !bmp.isRecycled()){
+                            bmp.recycle();
+                        }
                     }
+                    imageView.setImageDrawable(weakReference.get().getResources().getDrawable(task.getPlaceHolder()));
+                    imageView.refreshDrawableState();
                 }
             }
-            addTask(task);
         }
     }
 
     private synchronized void addTask(DisplayTask task) {
         mQueue.offer(task);
         if(mThreadHandler==null){
-            setOnThreadHandlerListener(new OnThreadHandlerListener() {
-                @Override
-                public void onInitFinish() {
-                    mThreadHandler.sendEmptyMessage(0);
-                }
-            });
+            synchronized (LoadManager.class){
+                setOnThreadHandlerListener(new OnThreadHandlerListener() {
+                    @Override
+                    public void onInitFinish() {
+                        mThreadHandler.sendEmptyMessage(0);
+                    }
+                });
+            }
         }else{
             mThreadHandler.sendEmptyMessage(0);
         }

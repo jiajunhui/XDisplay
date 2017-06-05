@@ -3,6 +3,7 @@ package com.kk.taurus.imagedisplay.net;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 
 import com.kk.taurus.imagedisplay.cache.CacheManager;
 import com.kk.taurus.imagedisplay.entity.DisplayTask;
@@ -47,33 +48,34 @@ public class LoadTask extends Thread {
         try {
             boolean needDiskCache = true;
             if(result.bitmap==null){
-                //check is local file
-                if(Util.isLocalFile(key)){
-                    //check is local image
-                    if(mTask.getThumbnailType()== ThumbnailType.NORMAL){
+
+                if(mTask.getThumbnailType()!=ThumbnailType.NORMAL){
+                    //load thumbnail by type
+                    ThumbnailType thumbnailType = mTask.getThumbnailType();
+                    switch (thumbnailType){
+                        case VIDEO_MINI_KIND:
+                        case VIDEO_MICRO_KIND:
+                        case VIDEO_FULL_SCREEN_KIND:
+                            result.bitmap = VideoThumbnailUtil.getVideoThumb(key, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                            break;
+                        case AUDIO:
+                            result.bitmap = AudioCoverUtil.createAlbumArt(key);
+                            break;
+                        case APK:
+                            if(mTask.getContext()!=null){
+                                result.bitmap = Util.getApkIconThumbnail(mTask.getContext().get(),key);
+                            }
+                            break;
+                    }
+                }else{
+                    //check is local file
+                    if(Util.isLocalFile(key)){
                         needDiskCache = false;
                         //get bitmap by local image
                         result.bitmap = Util.loadImageFromLocal(key,mTask.getTarget());
-                    }else{
-                        //load thumbnail by type
-                        ThumbnailType thumbnailType = mTask.getThumbnailType();
-                        switch (thumbnailType){
-                            case VIDEO_MINI_KIND:
-                            case VIDEO_MICRO_KIND:
-                            case VIDEO_FULL_SCREEN_KIND:
-                                result.bitmap = VideoThumbnailUtil.getVideoThumb(key, thumbnailType.getType());
-                                break;
-                            case AUDIO:
-                                result.bitmap = AudioCoverUtil.createAlbumArt(key);
-                                break;
-                            case APK:
-                                if(mTask.getContext()!=null){
-                                    result.bitmap = Util.getApkIconThumbnail(mTask.getContext().get(),key);
-                                }
-                                break;
-                        }
                     }
                 }
+
                 if(result.bitmap==null){
                     //download from network
                     result.bitmap = DownloadUtil.downloadBitmap(key, new DownloadUtil.OnDownloadListener() {

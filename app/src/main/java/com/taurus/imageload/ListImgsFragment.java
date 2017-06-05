@@ -49,7 +49,8 @@ public class ListImgsFragment extends Fragment
 //				.setCacheKeyProvider(new SettingBuilder.DefaultCacheKeyProvider()));
 		File dcim = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"DCIM");
 		File path = new File(dcim,"test1.jpg");
-		ImageDisplay.display(getContext(), null, Images.imageThumbUrls[0], R.mipmap.ic_launcher,new OnImageViewTarget(null){
+		String imageUrl = "http://172.16.216.70:8080/test_image.jpg";
+		ImageDisplay.display(getContext(), null, imageUrl, R.mipmap.ic_launcher,new OnImageViewTarget(null){
 			@Override
 			public void onProgress(int progress, int max) {
 				super.onProgress(progress, max);
