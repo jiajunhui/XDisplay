@@ -7,6 +7,6 @@ package com.kk.taurus.imagedisplay.callback;
 public interface OnViewTarget<R> {
     void onLoadStart();
     void onProgress(int progress, int max);
-    void onResourceReady(R resource, String tag);
+    void onResourceReady(R resource, String tag, int placeHolder);
     void onLoadFinish();
 }

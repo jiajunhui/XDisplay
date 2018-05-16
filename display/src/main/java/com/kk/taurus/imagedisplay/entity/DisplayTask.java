@@ -39,7 +39,7 @@ public class DisplayTask {
         //set tag
         this.setTag(url);
         if(target!=null){
-            target.setTag(url);
+            target.setTag(placeHolder, url);
         }
     }
 
@@ -100,11 +100,10 @@ public class DisplayTask {
     }
 
     public boolean isLegalTag(){
-
-        if(target!=null){
-
+        if(target==null){
+            return false;
         }
-        Object viewTag = target.getTag();
+        Object viewTag = target.getTag(placeHolder);
         if(TextUtils.isEmpty(tag) || viewTag==null)
             return false;
         return tag.equals(viewTag.toString());

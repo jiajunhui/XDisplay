@@ -32,18 +32,18 @@ public abstract class OnImageViewTarget implements OnViewTarget<Bitmap> {
     }
 
     @Override
-    public void onResourceReady(Bitmap resource, String tag) {
-        if(isLegalTag(tag)){
+    public void onResourceReady(Bitmap resource, String tag, int placeHolder) {
+        if(isLegalTag(tag, placeHolder)){
             mTarget.setImageBitmap(resource);
         }
     }
 
-    private boolean isLegalTag(String tag){
+    private boolean isLegalTag(String tag, int placeHolder){
         if(TextUtils.isEmpty(tag) || mTarget==null)
             return false;
-        if(mTarget.getTag()==null)
+        if(mTarget.getTag(placeHolder)==null)
             return false;
-        return tag.equals(mTarget.getTag().toString());
+        return tag.equals(mTarget.getTag(placeHolder).toString());
     }
 
 }

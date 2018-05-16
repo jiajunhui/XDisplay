@@ -14,6 +14,7 @@ public class LruCacheManager {
     private LruCache<String,Bitmap> mLruCache;
 
     public LruCacheManager(SettingBuilder settingBuilder){
+        //LruCache的配置
         mLruCache = new LruCache<String, Bitmap>(settingBuilder.getMaxMemoryCacheSize()){
             @Override
             protected int sizeOf(String key, Bitmap value){
@@ -22,6 +23,12 @@ public class LruCacheManager {
         };
     }
 
+    /**
+     * 加入或更新缓存
+     * @param key
+     * @param bitmap
+     * @return
+     */
     public Bitmap putCache(String key,Bitmap bitmap){
         Bitmap bitmapValue = getCache(key);
         if(bitmapValue==null){
@@ -31,6 +38,11 @@ public class LruCacheManager {
         return bitmapValue;
     }
 
+    /**
+     * 获取缓存
+     * @param key
+     * @return
+     */
     public Bitmap getCache(String key){
         if(mLruCache!=null){
             return mLruCache.get(key);
@@ -38,16 +50,27 @@ public class LruCacheManager {
         return null;
     }
 
+    /**
+     * 清空缓存
+     */
     public void deleteCache(){
         if(mLruCache!=null)
             mLruCache.evictAll();
     }
 
+    /**
+     * 移除指定的缓存
+     * @param key
+     */
     public void removeCache(String key){
         if(mLruCache!=null)
             mLruCache.remove(key);
     }
 
+    /**
+     * 当前缓存大小
+     * @return
+     */
     public int size(){
         int size=0;
         if(mLruCache!=null)

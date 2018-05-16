@@ -29,6 +29,7 @@ public class DiskCacheManager {
             if(!cacheDirectory.exists()){
                 cacheDirectory.mkdirs();
             }
+            //DiskLruCache的配置
             mDiskLruCache = DiskLruCache.open(cacheDirectory, appVersion, valueCount, maxSize);
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,6 +44,12 @@ public class DiskCacheManager {
         return settingBuilder.getCacheKeyProvider().getCacheKey(key);
     }
 
+    /**
+     * 加入或更新缓存
+     * @param key
+     * @param bitmap
+     * @return
+     */
     public boolean putDiskCache(String key, Bitmap bitmap){
         DiskLruCache.Editor editor = null;
         try {
@@ -76,6 +83,9 @@ public class DiskCacheManager {
         return false;
     }
 
+    /**
+     * 刷新缓存
+     */
     public void flushCache() {
         if (mDiskLruCache != null) {
             try {
@@ -86,6 +96,11 @@ public class DiskCacheManager {
         }
     }
 
+    /**
+     * 获取缓存
+     * @param key
+     * @return
+     */
     public Bitmap getDiskCache(String key){
         String md5Key = getCacheKey(key);
         Bitmap bitmap=null;
@@ -103,6 +118,9 @@ public class DiskCacheManager {
         return bitmap;
     }
 
+    /**
+     * 清空缓存
+     */
     public void deleteDiskCache(){
         try {
             if(mDiskLruCache!=null){
@@ -113,6 +131,10 @@ public class DiskCacheManager {
         }
     }
 
+    /**
+     * 移除指定的缓存
+     * @param key
+     */
     public void removeDiskCache(String key){
         if(mDiskLruCache!=null){
             try {
@@ -123,6 +145,10 @@ public class DiskCacheManager {
         }
     }
 
+    /**
+     * 获取当前缓存的大小
+     * @return
+     */
     public int size(){
         int size=0;
         if(mDiskLruCache!=null){
@@ -131,6 +157,9 @@ public class DiskCacheManager {
         return size;
     }
 
+    /**
+     * 关闭缓存
+     */
     public void close(){
         if(mDiskLruCache!=null){
             try {

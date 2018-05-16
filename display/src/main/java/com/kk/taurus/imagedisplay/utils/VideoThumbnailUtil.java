@@ -41,7 +41,11 @@ public class VideoThumbnailUtil {
         if(!Util.isLocalFile(path)){
             return getVideoThumb(path,null);
         }
-        return ThumbnailUtils.createVideoThumbnail(path, kind);
+        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(path, kind);
+        if(thumbnail==null){
+            thumbnail = getVideoThumb(path, null);
+        }
+        return thumbnail;
     }
 
 }

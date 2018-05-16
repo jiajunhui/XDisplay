@@ -168,7 +168,7 @@ public class LoadManager {
     private void refreshResult(final Bitmap bitmap, final DisplayTask task) {
         final OnViewTarget onViewTarget = task.getOnViewTarget();
         if(onViewTarget!=null){
-            onViewTarget.onResourceReady(bitmap, task.getTag());
+            onViewTarget.onResourceReady(bitmap, task.getTag(), task.getPlaceHolder());
         }else{
             final View view = task.getTarget();
             if(view instanceof ImageView){

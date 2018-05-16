@@ -3,7 +3,6 @@ package com.kk.taurus.imagedisplay.net;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 
 import com.kk.taurus.imagedisplay.cache.CacheManager;
 import com.kk.taurus.imagedisplay.entity.DisplayTask;
@@ -56,7 +55,7 @@ public class LoadTask extends Thread {
                         case VIDEO_MINI_KIND:
                         case VIDEO_MICRO_KIND:
                         case VIDEO_FULL_SCREEN_KIND:
-                            result.bitmap = VideoThumbnailUtil.getVideoThumb(key, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                            result.bitmap = VideoThumbnailUtil.getVideoThumb(key, thumbnailType.getType());
                             break;
                         case AUDIO:
                             result.bitmap = AudioCoverUtil.createAlbumArt(key);
